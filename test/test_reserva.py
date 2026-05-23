@@ -5,7 +5,8 @@ if __name__ == "__main__":
     import sys
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.client import FonobusClient, Stop
+from src.models import Stop
+from src.client import FonobusClient
 from src.config import config
 
 
@@ -32,7 +33,7 @@ if __name__ == "__main__":
 
     try:
         response = client.create_reserva(
-            stop_id=Stop.CORRIENTES, date=next_week_day
+            stop_id=Stop.PADUA, date=next_week_day
         )
         print(response)
     except Exception as e:

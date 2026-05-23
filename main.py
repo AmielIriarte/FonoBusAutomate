@@ -1,6 +1,7 @@
+from src.models import Stop
 from src.config import config
 from src.core import Weekdays, run_reservation
-from src.client import FonobusClient, Stop
+from src.client import FonobusClient
 from src.scheduler import Scheduler
 
 

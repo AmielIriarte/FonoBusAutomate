@@ -1,28 +1,15 @@
-from enum import IntEnum
 from datetime import datetime, timedelta
 
 from src.config import Config
-from src.client import FonobusClient, Stop
+from src.models import Weekdays, Stop
+from src.client import FonobusClient
 from src.emailer import send_email
+from src.lock import already_executed, mark_executed
 from src.exceptions import (
     ReservaDuplicadaError,
     FechaPasadaError,
     ReservaDesconocidaError,
 )
-
-
-class Weekdays(IntEnum):
-    """Enum que representa los días de la semana para la reserva."""
-    MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-
-    @staticmethod
-    def get_values():
-        """Función que devuelve una lista con los valores de los días de la semana definidos en el enum."""
-        return [day.value for day in Weekdays]
 
 
 def get_target_date(target_day: Weekdays):
@@ -88,16 +75,24 @@ def run_reservation(day: Weekdays, dest: Stop, client: FonobusClient, config: Co
         client (FonobusClient): Cliente de Fonobus.
         config (Config): Configuración de la aplicación.
     """
-    try:
-        if not date_condition(day):
-            print(f"Omitiendo ciclo para día: {day} - parada: {dest}...")
-            return
+    if already_executed(day, dest):
+        print(
+            f"Ya ejecutado hoy para día: {day} - parada: {dest}. Omitiendo..."
+        )
+        return
 
+    if not date_condition(day):
+        print(f"Omitiendo ciclo para día: {day} - parada: {dest}...")
+        return
+
+    try:
         print(f"Ejecutando job para día: {day} - parada: {dest}")
         target = get_target_date(day)
         date_str = format_date(target)
 
         response = client.create_reserva(dest, date_str)
+
+        mark_executed(day, dest)
 
         print(f"Reserva creada correctamente para día: {day} - parada: {dest}")
         send_email(
@@ -114,13 +109,11 @@ Respuesta:
         )
     except ReservaDuplicadaError as e:
         print(f"Error: Reserva ya existente para {day} - {dest}")
-        send_email("⚠ Reserva ya existente - Fonobus", str(e), config)
     except FechaPasadaError as e:
         print(f"Error: Fecha inválida para {day} - {dest}")
-        send_email("⚠ Fecha inválida - Fonobus", str(e), config)
     except ReservaDesconocidaError as e:
         print(f"Error: Error desconocido para {day} - {dest}")
-        send_email("❌ Error desconocido Fonobus", str(e), config)
+        send_email("❌ Error desconocido - Fonobus", str(e), config)
     except Exception as e:
         print(f"Error: Error crítico para {day} - {dest}")
         send_email("🔥 Error crítico - Fonobus", str(e), config)

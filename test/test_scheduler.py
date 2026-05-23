@@ -3,10 +3,10 @@ if __name__ == "__main__":
     import sys
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from src.models import Weekdays, Stop
 from scheduler import Scheduler
 from src.config import Config
-from src.core import Weekdays
-from src.client import FonobusClient, Stop
+from src.client import FonobusClient
 
 
 

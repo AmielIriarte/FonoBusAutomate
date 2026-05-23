@@ -1,8 +1,9 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from src.config import Config
-from src.core import Weekdays, run_reservation
-from src.client import FonobusClient, Stop
+from src.models import Weekdays, Stop
+from src.client import FonobusClient
+from src.core import run_reservation
 
 day_schedule_mapping = {
     Weekdays.MONDAY: "tue",
@@ -26,7 +27,7 @@ class Scheduler:
         self._client: FonobusClient = client
         self._config: Config = config
 
-    def add_job(self, reserve_day: Weekdays, stop: Stop, exec_hour: int = 0, exec_minute: int = 51):
+    def add_job(self, reserve_day: Weekdays, stop: Stop, exec_hour: int = 7, exec_minute: int = 10):
         """Agrega un job al scheduler para el día especificado a la hora indicada.
 
         Args:

@@ -1,14 +1,8 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from src.config import Config
-from src.core import Weekdays, Stop, get_target_date, format_date
-from src.client import FonobusClient
-from src.emailer import send_email
-from src.exceptions import (
-    ReservaDuplicadaError,
-    FechaPasadaError,
-    ReservaDesconocidaError,
-)
+from src.core import Weekdays, run_reservation
+from src.client import FonobusClient, Stop
 
 day_schedule_mapping = {
     Weekdays.MONDAY: "tue",
@@ -32,48 +26,6 @@ class Scheduler:
         self._client: FonobusClient = client
         self._config: Config = config
 
-    def _run(self, day: Weekdays, dest: Stop):
-        """Función que se ejecuta cada vez que se dispara el job programado.
-        Se encarga de crear la reserva y manejar los posibles errores, enviando un email con el resultado.
-        Args:
-            day (Weekdays): El día de la semana para el cual se está intentando crear la reserva.
-            dest (Stop): El destino de la reserva.
-        """
-        try:
-            print(f"Ejecutando job para {day} - {dest}")
-            target = get_target_date(day)
-            date_str = format_date(target)
-
-            response = self._client.create_reserva(
-                dest, date_str
-            )
-
-            print(f"Reserva creada correctamente para {day} - {dest}")
-            send_email(
-                "✔ Reserva OK - Fonobus",
-                f"""
-Reserva creada correctamente.
-
-Fecha: {date_str}
-
-Respuesta:
-{response}
-                """,
-                self._config,
-            )
-        except ReservaDuplicadaError as e:
-            print(f"Error: Reserva ya existente para {day} - {dest}")
-            send_email("⚠ Reserva ya existente - Fonobus", str(e), self._config)
-        except FechaPasadaError as e:
-            print(f"Error: Fecha inválida para {day} - {dest}")
-            send_email("⚠ Fecha inválida - Fonobus", str(e), self._config)
-        except ReservaDesconocidaError as e:
-            print(f"Error: Error desconocido para {day} - {dest}")
-            send_email("❌ Error desconocido Fonobus", str(e), self._config)
-        except Exception as e:
-            print(f"Error: Error crítico para {day} - {dest}")
-            send_email("🔥 Error crítico - Fonobus", str(e), self._config)
-
     def add_job(self, reserve_day: Weekdays, stop: Stop, exec_hour: int = 0, exec_minute: int = 51):
         """Agrega un job al scheduler para el día especificado a la hora indicada.
 
@@ -84,7 +36,7 @@ Respuesta:
             exec_minute (int): El minuto de la hora para ejecutar el job.
         """
         self._scheduler.add_job(
-            lambda: self._run(reserve_day, stop),
+            lambda: run_reservation(reserve_day, stop, self._client, self._config),
             "cron",
             day_of_week=day_schedule_mapping[reserve_day],
             hour=exec_hour,

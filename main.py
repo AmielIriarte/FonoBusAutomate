@@ -1,6 +1,6 @@
 from src.config import config
-from src.core import Weekdays, Stop
-from src.client import FonobusClient
+from src.core import Weekdays, run_reservation
+from src.client import FonobusClient, Stop
 from src.scheduler import Scheduler
 
 
@@ -13,7 +13,7 @@ def reservation_config():
     ]
 
 
-def main():
+def run_continuos():
     client = FonobusClient(config.FONOBUS_TOKEN)
     scheduler: Scheduler = Scheduler(client, config)
 
@@ -23,6 +23,22 @@ def main():
 
     print("Iniciando scheduler...")
     scheduler.start()
+
+
+def run():
+    client = FonobusClient(config.FONOBUS_TOKEN)
+
+    for day, stop in reservation_config():
+        run_reservation(day, stop, client, config)
+
+
+def main():
+    if config.RUN_SCHEDULER:
+        print("RUN_SCHEDULER está habilitado. Iniciando en modo continuo...")
+        run_continuos()
+    else:
+        print("RUN_SCHEDULER está deshabilitado. Ejecutando una sola vez...")
+        run()
 
 
 if __name__ == "__main__":

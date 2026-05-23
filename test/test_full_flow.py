@@ -3,8 +3,8 @@ if __name__ == "__main__":
     import sys
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.client import FonobusClient
-from src.core import Stop, Weekdays, get_target_date, format_date
+from src.client import FonobusClient, Stop
+from src.core import Weekdays, get_target_date, format_date
 from src.config import config
 from src.emailer import send_email
 

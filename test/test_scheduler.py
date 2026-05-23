@@ -1,5 +1,3 @@
-from apscheduler.schedulers.blocking import BlockingScheduler
-
 if __name__ == "__main__":
     import os
     import sys
@@ -7,8 +5,8 @@ if __name__ == "__main__":
 
 from scheduler import Scheduler
 from src.config import Config
-from src.core import Stop, Weekdays
-from src.client import FonobusClient
+from src.core import Weekdays
+from src.client import FonobusClient, Stop
 
 
 

@@ -11,11 +11,7 @@ class Config:
         EMAIL_FROM (str): Dirección de correo electrónico desde la cual se enviarán las notificaciones.
         EMAIL_PASS (str): Contraseña de la dirección de correo electrónico.
         EMAIL_TO (str): Dirección de correo electrónico a la cual se enviarán las notificaciones.
-        SERVICE_ID (int): ID del servicio para el cual se crearán las reservas.
-        STOP_ID (str): ID de la parada para la cual se crearán las reservas.
-    Nota: Los SERVICE_ID analizados son los siguientes:
-        - 5284 (7:30 | Av. Corrientes)
-        - 6097 (7:40 | Torres IBM).
+        RUN_SCHEDULER (bool): Indica si se debe ejecutar el programador de reservas.
     """
     FONOBUS_TOKEN = os.getenv("FONOBUS_TOKEN")
 
@@ -23,7 +19,7 @@ class Config:
     EMAIL_PASS = os.getenv("EMAIL_PASS")
     EMAIL_TO = os.getenv("EMAIL_TO")
 
-    SERVICE_ID = 6097 # Servicio de las 7:40
+    RUN_SCHEDULER: bool = int(os.getenv("RUN_SCHEDULER", "0")) == 1
 
 
 config = Config()

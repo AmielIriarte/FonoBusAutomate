@@ -1,12 +1,35 @@
 import requests
+from enum import StrEnum
 from typing import Any, Dict
 
-from src.core import Stop, service_id_from_stop
 from src.exceptions import (
     ReservaDuplicadaError,
     FechaPasadaError,
     ReservaDesconocidaError,
 )
+
+
+class Stop(StrEnum):
+    """Enum que representa las paradas disponibles para la reserva."""
+
+    PADUA = "DIRECTORIO Y RIVADAVIA"
+    CORRIENTES = "AV CORRIENTES 316"
+
+
+def service_id_from_stop(stop: Stop) -> int:
+    """Función que devuelve el ID del servicio correspondiente a una parada específica.
+    Args:
+        stop (Stop): La parada para la cual se desea obtener el ID del servicio.
+    Returns:
+        int: El ID del servicio correspondiente a la parada.
+    Raises:
+        ValueError: Si la parada no es reconocida.
+    """
+    if stop == Stop.PADUA:
+        return 6097
+    if stop == Stop.CORRIENTES:
+        return 4606
+    raise ValueError(f"Parada desconocida: {stop}")
 
 
 class FonobusClient:

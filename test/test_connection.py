@@ -3,8 +3,7 @@ if __name__ == "__main__":
     import sys
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from core import Stop
-from src.client import FonobusClient
+from src.client import FonobusClient, Stop
 from src.config import config
 
 

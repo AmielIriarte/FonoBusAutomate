@@ -1,0 +1,52 @@
+name: Fonobus Scheduler
+
+on:
+  schedule:
+    # 07:10 Argentina = 10:10 UTC
+
+    # Martes
+    - cron: "10 10 * * 2"
+
+    # Miércoles
+    - cron: "10 10 * * 3"
+
+    # Jueves
+    - cron: "10 10 * * 4"
+
+    # Viernes
+    - cron: "10 10 * * 5"
+
+    # Sábado
+    - cron: "10 10 * * 6"
+
+  workflow_dispatch:
+
+jobs:
+  run-fonobus:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Setup Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run bot
+        env:
+          FONOBUS_TOKEN: ${{ secrets.FONOBUS_TOKEN }}
+          SERVICE_ID: ${{ secrets.SERVICE_ID }}
+          STOP_ID: ${{ secrets.STOP_ID }}
+
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+        run: |
+          uv run python main.py

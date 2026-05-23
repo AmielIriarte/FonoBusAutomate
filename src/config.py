@@ -19,7 +19,7 @@ class Config:
     EMAIL_PASS = os.getenv("EMAIL_PASS")
     EMAIL_TO = os.getenv("EMAIL_TO")
 
-    RUN_SCHEDULER: bool = int(os.getenv("RUN_SCHEDULER", "0")) == 1
+    RUN_SCHEDULER: bool = str(os.getenv("RUN_SCHEDULER", "0")) == "1"
 
 
 config = Config()

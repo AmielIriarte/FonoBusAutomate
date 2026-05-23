@@ -2,22 +2,11 @@ name: Fonobus Scheduler
 
 on:
   schedule:
-    # 07:10 Argentina = 10:10 UTC
-
-    # Martes
-    - cron: "10 10 * * 2"
-
-    # Miércoles
-    - cron: "10 10 * * 3"
-
-    # Jueves
-    - cron: "10 10 * * 4"
-
-    # Viernes
-    - cron: "10 10 * * 5"
-
-    # Sábado
-    - cron: "10 10 * * 6"
+    # Argentina UTC-3
+    # 07:05 / 07:10 / 07:15 ARG
+    - cron: "5 10 * * 2-6"
+    - cron: "10 10 * * 2-6"
+    - cron: "15 10 * * 2-6"
 
   workflow_dispatch:
 

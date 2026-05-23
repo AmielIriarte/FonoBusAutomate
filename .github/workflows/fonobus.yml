@@ -40,13 +40,14 @@ jobs:
 
       - name: Run bot
         env:
+          # Secrets
           FONOBUS_TOKEN: ${{ secrets.FONOBUS_TOKEN }}
-          SERVICE_ID: ${{ secrets.SERVICE_ID }}
-          STOP_ID: ${{ secrets.STOP_ID }}
-
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+          # Variable de control
+          RUN_SCHEDULER: ${{ vars.RUN_SCHEDULER }}
 
         run: |
           uv run python main.py

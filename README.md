@@ -58,10 +58,8 @@ python main.py
 
 En `main.py`, la función `reservation_config()` define qué reservas ejecutar:
 
-- Lunes → `PADUA`
-- Miércoles → `PADUA`
-- Lunes → `CORRIENTES`
-- Miércoles → `CORRIENTES`
+- Lunes → `PADUA` y `CORRIENTES`
+- Miércoles → `PADUA` y `CORRIENTES`
 
 Podés modificar esa lista para agregar/quitar combinaciones día/parada.
 

@@ -3,8 +3,9 @@ name: Fonobus Scheduler
 on:
   schedule:
     # Argentina UTC-3
-    # 07:05 / 07:10 / 07:15 ARG
-    - cron: "5 10 * * 2-6"
+    # 6:45 / 07:00 / 07:10 / 07:15 ARG
+    - cron: "45 9 * * 2-6"
+    - cron: "0 10 * * 2-6"
     - cron: "10 10 * * 2-6"
     - cron: "15 10 * * 2-6"
 

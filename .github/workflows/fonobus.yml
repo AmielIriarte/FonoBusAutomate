@@ -8,6 +8,16 @@ on:
     - cron: "0 10 * * 2-6"
     - cron: "10 10 * * 2-6"
     - cron: "15 10 * * 2-6"
+    # 03:40 Argentina = 06:40 UTC
+    # 05:40 Argentina = 08:40 UTC
+    # 07:00 Argentina = 10:00 UTC
+
+    # Ejecuta todos los días a las 06:40 UTC (03:40 Argentina)
+    - cron: "40 6 * * *"
+    # Ejecuta todos los días a las 08:40 UTC (05:40 Argentina)
+    - cron: "40 8 * * *"
+    # Ejecuta todos los días a las 10:00 UTC (07:00 Argentina)
+    - cron: "0 10 * * *"
 
   workflow_dispatch:
 
@@ -38,6 +48,7 @@ jobs:
 
           # Variable de control
           RUN_SCHEDULER: ${{ vars.RUN_SCHEDULER }}
+          RUN_DAYS: ${{ vars.RUN_DAYS }}
 
         run: |
           uv run python main.py
